@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace lab9_enhancedstudentinfo
 {
@@ -8,29 +9,17 @@ namespace lab9_enhancedstudentinfo
         /*Program will recognize valid inputs when the user requests information
          * about students in class.
          * 
-         * uses lists instead of arrays;
-         * provides information about students in a class.
-         * prompt the user to ask about a particular student.
-         * give proper responses according to user submitted information.
-         * ask user if they would like to learn about another student.
+         * uses lists instead of arrays.
+         * provides hometown, favorite food and favorite number information about students in a class.
+         * prompt the user to retrieve, add or quit.
+         * gives proper responses according to user submitted information.
+         * ask user if they would like to learn or add info about another student at the correct steps.
+         * added support for more than 20 students.
+         * using LINQ for input validation to reject numbers when appropriate to do so.
          * 
-         * TODO: use lists instead of arrays.
-         * List<string>
-         * ArrayList
-         * 
-         * TODO: add another list to contain student's favorite number.
-         * TODO: maybe use an array to contain choices for student info???
-         * TODO: update validation to include favorite number. (no blanks!)
-         * TODO: ask to add another student.
-         * TODO: when a user adds another student, sort, locate student name in
-         * list and then add the student info at the correct index.
-         * TODO: make a StudentInfo class with name and other info as data members.
-         * 
-         * ** EX CHALLENGE, CONVERT TO A 2D ARRAY OR LIST!
-         * 
-         * use a list of StudentInfo instance to store the information.
-         * 
-         * input validation.*/
+         * TODO: EX Challenge: when a user adds another student, sort, 
+         * locate student name in list and then add the student info at the correct index.
+         * TODO: make a StudentInfo class with name and other info as data members. */
 
         static void Main(string[] args)
         {
@@ -76,7 +65,7 @@ namespace lab9_enhancedstudentinfo
                     bool RetrievingInfo = true;
                     while (RetrievingInfo == true)
                     {
-                        Console.WriteLine("Enter a student number 1-20");
+                        Console.WriteLine($"Enter a student number 1-{Students.Count}");
                         string userchoice;
                         userchoice = Console.ReadLine();
                         int studentnum;
@@ -84,7 +73,7 @@ namespace lab9_enhancedstudentinfo
                         studentnum = studentnum - 1;
 
                         //input validation for student number.
-                        if (studentnum < 0 || studentnum >= 20)
+                        if (studentnum < 0 || studentnum >= Students.Count)
                         {
                             Console.WriteLine("That student does not exist.  Please try again.");
                             continue;
@@ -139,13 +128,15 @@ namespace lab9_enhancedstudentinfo
                             Console.WriteLine("What is the student's name?");
                             string NewStudent = Console.ReadLine();
 
-                            if (String.IsNullOrEmpty(NewStudent))
+
+                            bool numbersuccess = NewStudent.Any(char.IsDigit);
+                                                            
+                            if (String.IsNullOrEmpty(NewStudent) || numbersuccess == true)
                             {
                                 Console.WriteLine("Please enter a valid name.");
                                 continue;
                             }
                             Students.Add(NewStudent);
-                            Console.WriteLine(Students[Students.Count - 1]);
                             AskingName = false;
 
                         }
@@ -157,7 +148,9 @@ namespace lab9_enhancedstudentinfo
                             Console.WriteLine("What is the student's hometown?");
                             String NewHometown = Console.ReadLine();
 
-                            if (String.IsNullOrEmpty(NewHometown))
+                            bool numbersuccess = NewHometown.Any(char.IsDigit);
+
+                            if (String.IsNullOrEmpty(NewHometown) || numbersuccess == true)
                             {
                                 Console.WriteLine("Please enter a valid hometown.");
                                 continue;
@@ -173,7 +166,9 @@ namespace lab9_enhancedstudentinfo
                             Console.WriteLine("What is the student's favorite food?");
                             String NewFavFood = Console.ReadLine();
 
-                            if (String.IsNullOrEmpty(NewFavFood))
+                            bool numbersuccess = NewFavFood.Any(char.IsDigit);
+
+                            if (String.IsNullOrEmpty(NewFavFood) || numbersuccess == true)
                             {
                                 Console.WriteLine("Please enter a valid favorite food.");
                                 continue;
@@ -189,10 +184,9 @@ namespace lab9_enhancedstudentinfo
                             Console.WriteLine("What is the student's favorite number?");
                             String NewFavNumber = Console.ReadLine();
 
-                            int i;
-                            bool success = int.TryParse(NewFavNumber, out i);
+                            bool numbersuccess = NewFavNumber.All(char.IsDigit);
 
-                            if (String.IsNullOrEmpty(NewFavNumber) || success == false)
+                            if (String.IsNullOrEmpty(NewFavNumber) || numbersuccess == false)
                             {
                                 Console.WriteLine("Please enter a valid favorite number.");
                                 continue;
